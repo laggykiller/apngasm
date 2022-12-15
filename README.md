@@ -1,3 +1,5 @@
+***This fork is only for storing a standalone Windows executable in release, which is used in workflow of personal projects. Please don't use this fork!***
+
 apngasm
 =======
 The next generation of apngasm, the APNG Assembler.
