@@ -3,11 +3,11 @@
 #include "listener/apngasmlistener.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
-#include <filesystem>
+#include <boost/filesystem/operations.hpp>
 #include <iostream>
 
 namespace {
-const char separator = std::filesystem::path::preferred_separator;
+const char separator = boost::filesystem::path::preferred_separator;
 
 bool isNumber(const std::string s) {
   std::string::const_iterator it = s.begin();
@@ -114,12 +114,12 @@ private:
 
   // Return true if create succeeded.
   bool createParentDirs(const std::string &filePath) const {
-    std::filesystem::path path = filePath;
-    std::filesystem::path parent = path.parent_path();
+    boost::filesystem::path path = filePath;
+    boost::filesystem::path parent = path.parent_path();
     if (parent == "") {
       return true;
     }
-    return std::filesystem::create_directories(parent);
+    return boost::filesystem::create_directories(parent);
   }
 }; // class CustomAPNGAsmListener
 
@@ -240,7 +240,7 @@ int CLI::disassemble(const std::string &src) {
   // Output png image files.
   std::string outdir;
   if (!options.outputFile(outdir)) {
-    std::filesystem::path path = src;
+    boost::filesystem::path path = src;
     outdir = path.replace_extension("").string();
   }
   if (!assembler.savePNGs(outdir))
@@ -249,7 +249,7 @@ int CLI::disassemble(const std::string &src) {
   // Output json spec files.
   std::string outSpecFile;
   if (options.outputJSONFile(outSpecFile)) {
-    std::filesystem::path path = outSpecFile;
+    boost::filesystem::path path = outSpecFile;
     if (path.is_relative())
       outSpecFile = outdir + separator + outSpecFile;
 
@@ -258,7 +258,7 @@ int CLI::disassemble(const std::string &src) {
 
   // Output XML spec files.
   if (options.outputXMLFile(outSpecFile)) {
-    std::filesystem::path path = outSpecFile;
+    boost::filesystem::path path = outSpecFile;
     if (path.is_relative())
       outSpecFile = outdir + separator + outSpecFile;
 

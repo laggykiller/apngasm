@@ -1,28 +1,28 @@
 #include "specwriter.h"
 #include "priv/specwriterimpl.h"
 #include "../apngasm.h"
-#include <filesystem>
+#include <boost/filesystem/operations.hpp>
 
 namespace apngasm {
   namespace spec {
 
     namespace {
-      const char separator = std::filesystem::path::preferred_separator;
+      const char separator = boost::filesystem::path::preferred_separator;
 
-      const std::filesystem::path createAbsolutePath(const std::string& path)
+      const boost::filesystem::path createAbsolutePath(const std::string& path)
       {
-        const std::filesystem::path oldPath = std::filesystem::current_path();
-        std::filesystem::path result = path;
-        std::filesystem::current_path(result.parent_path());
-        result = std::filesystem::current_path();
-        std::filesystem::current_path(oldPath);
+        const boost::filesystem::path oldPath = boost::filesystem::current_path();
+        boost::filesystem::path result = path;
+        boost::filesystem::current_path(result.parent_path());
+        result = boost::filesystem::current_path();
+        boost::filesystem::current_path(oldPath);
         return result;
       }
 
       const std::string createRelativeDir(const std::string& from, const std::string& to)
       {
-        std::filesystem::path fromPath = createAbsolutePath(from);
-        std::filesystem::path toPath = createAbsolutePath(to);
+        boost::filesystem::path fromPath = createAbsolutePath(from);
+        boost::filesystem::path toPath = createAbsolutePath(to);
         const std::string separatorStr = std::string(1, separator);
 
         // Convert path to native.

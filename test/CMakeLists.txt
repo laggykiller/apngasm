@@ -15,7 +15,6 @@ add_executable(apngasm-cpp-test
 set_target_properties(apngasm-cpp-test
   PROPERTIES
   OUTPUT_NAME apngasm-cpp-test
-  CXX_STANDARD 20
 )
 
 link_directories(${PROJECT_BINARY_DIR}/lib)

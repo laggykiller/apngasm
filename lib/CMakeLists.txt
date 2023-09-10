@@ -52,7 +52,6 @@ set_target_properties(${APNGASM_DYNAMIC_LIB_TARGET}
   PROPERTIES
   POSITION_INDEPENDENT_CODE TRUE
   OUTPUT_NAME apngasm
-  CXX_STANDARD 20
 )
 
 # Add the static library/archive
@@ -64,7 +63,6 @@ set_target_properties(${APNGASM_STATIC_LIB_TARGET}
   PROPERTIES
   POSITION_INDEPENDENT_CODE TRUE
   OUTPUT_NAME apngasm
-  CXX_STANDARD 20
 )
 
 # Add libraries/includes
@@ -83,7 +81,7 @@ target_link_libraries(${APNGASM_STATIC_LIB_TARGET} ${PNG_LIBRARIES})
 message(${PNG_VERSION_STRING})
 
 #SET(CMAKE_FIND_LIBRARY_SUFFIXES .dll.a .a .lib ${CMAKE_FIND_LIBRARY_SUFFIXES})
-find_package(Boost REQUIRED COMPONENTS program_options regex system)
+find_package(Boost REQUIRED COMPONENTS program_options regex system filesystem)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 target_link_libraries(${APNGASM_DYNAMIC_LIB_TARGET} ${Boost_LIBRARIES})
 target_link_libraries(${APNGASM_STATIC_LIB_TARGET} ${Boost_LIBRARIES})

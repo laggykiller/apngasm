@@ -31,7 +31,7 @@ if (MSYS)
 endif ()
 
 # Search and prepare Boost
-find_package(Boost REQUIRED COMPONENTS program_options regex system)
+find_package(Boost REQUIRED COMPONENTS program_options regex filesystem system)
 include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(PNG REQUIRED)
@@ -46,7 +46,6 @@ add_executable(apngasm-cli
 set_target_properties(apngasm-cli
   PROPERTIES 
   OUTPUT_NAME apngasm
-  CXX_STANDARD 20
 )
 
 # Link to built apngasm library
