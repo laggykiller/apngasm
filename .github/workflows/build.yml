@@ -42,7 +42,7 @@ jobs:
               CPPFLAGS: -I/usr/local/opt/icu4c/include
               MACOSX_DEPLOYMENT_TARGET: 10.9
             CMD_DEPS: |
-              brew install cmake \
+              brew install --build-from-source cmake \
               boost \
               libpng \
               lzlib \
