@@ -46,11 +46,14 @@ jobs:
               CPPFLAGS: -I/usr/local/opt/icu4c/include
               MACOSX_DEPLOYMENT_TARGET: "10.9"
             CMD_DEPS: |
-              brew install --build-from-source cmake \
-              boost \
-              libpng \
-              lzlib \
-              icu4c
+              brew reinstall --build-from-source cmake libpng lzlib icu4c &&
+              curl -O -L "https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.zip" &&
+              tar -xf ./boost_1_82_0.zip &&
+              rm ./boost_1_82_0.zip &&
+              mv ./boost_1_82_0 ./boost &&
+              cd ./boost &&
+              ./bootstrap.sh &&
+              ./b2 install --build-type=complete --with-program_options --with-regex --with-system --with-filesystem -j4 &&
             CMD_COMPILE: |
               cd build
               cmake -DBoost_USE_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
