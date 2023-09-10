@@ -19,6 +19,8 @@ jobs:
         include:
           - os: ubuntu-20.04
             TARGET: linux
+            ENV_DEPS:
+              PLACEHOLDER_ENV:
             ENV_COMPILE:
               PLACEHOLDER_ENV:
             CMD_DEPS: |
@@ -38,11 +40,11 @@ jobs:
           - os: macos-11
             TARGET: macos
             ENV_DEPS:
-              MACOSX_DEPLOYMENT_TARGET: 10.9
+              MACOSX_DEPLOYMENT_TARGET: "10.9"
             ENV_COMPILE:
               LDFLAGS: -L/usr/local/opt/icu4c/lib
               CPPFLAGS: -I/usr/local/opt/icu4c/include
-              MACOSX_DEPLOYMENT_TARGET: 10.9
+              MACOSX_DEPLOYMENT_TARGET: "10.9"
             CMD_DEPS: |
               brew install --build-from-source cmake \
               boost \
@@ -59,6 +61,8 @@ jobs:
 
           - os: windows-2019
             TARGET: windows
+            ENV_DEPS:
+              PLACEHOLDER_ENV:
             ENV_COMPILE:
               PLACEHOLDER_ENV:
             CMD_DEPS: |
