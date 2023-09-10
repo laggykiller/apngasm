@@ -53,7 +53,7 @@ jobs:
               mv ./boost_1_82_0 ./boost &&
               cd ./boost &&
               ./bootstrap.sh &&
-              ./b2 install --build-type=complete --with-program_options --with-regex --with-system --with-filesystem -j4
+              ./b2 install --with-program_options --with-regex --with-system --with-filesystem -j4
             CMD_COMPILE: |
               cd build
               cmake -DBoost_USE_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
