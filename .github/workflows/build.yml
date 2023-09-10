@@ -37,6 +37,8 @@ jobs:
 
           - os: macos-11
             TARGET: macos
+            ENV_DEPS:
+              MACOSX_DEPLOYMENT_TARGET: 10.9
             ENV_COMPILE:
               LDFLAGS: -L/usr/local/opt/icu4c/lib
               CPPFLAGS: -I/usr/local/opt/icu4c/include
@@ -73,6 +75,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: "Install ${{matrix.TARGET}} dependencies:"
+        env: ${{ matrix.ENV_DEPS }}
         run: ${{ matrix.CMD_DEPS }}
 
       - name: "Create directory on ${{matrix.TARGET}}:"
