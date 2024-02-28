@@ -15,50 +15,48 @@ jobs:
     name: Build packages
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-20.04
             TARGET: linux
             ENV:
-              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+              PLACEHOLDER:
             VCPKG_TRIPLET: "x64-linux-release"
-            VCPKG_EXE: ${VCPKG_ROOT}/vcpkg
+            VCPKG_EXE: vcpkg/vcpkg
             CMD_COMPILE: |
-              cd build
-              cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
-              make -j install
-              cd ../release
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=$PWD/release -DCMAKE_TOOLCHAIN_FILE=$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake .
+              make -C build -j install
+              cd release
               zip -r9 apngasm_${{github.ref_name}}_linux_AMD64.zip ./*
             OUT_FILE_NAME: release/apngasm_${{github.ref_name}}_linux_AMD64.zip
 
           - os: macos-12
             TARGET: macos
             ENV:
-              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
               MACOSX_DEPLOYMENT_TARGET: "10.9"
               VCPKG_OSX_DEPLOYMENT_TARGET: "10.9"
               VCPKG_C_FLAGS: "-mmacosx-version-min=10.9"
               VCPKG_CXX_FLAGS: "-mmacosx-version-min=10.9"
             VCPKG_TRIPLET: "x64-osx-release"
-            VCPKG_EXE: ${VCPKG_ROOT}/vcpkg
+            VCPKG_EXE: vcpkg/vcpkg
             CMD_COMPILE: |
-              cd build
-              cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
-              make -j install
-              cd ../release
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=$PWD/release -DCMAKE_TOOLCHAIN_FILE=$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake .
+              make -C build -j install
+              cd release
               zip -r9 apngasm_${{github.ref_name}}_macos_AMD64.zip ./*
             OUT_FILE_NAME: release/apngasm_${{github.ref_name}}_macos_AMD64.zip
 
           - os: windows-2019
             TARGET: windows
             ENV:
-              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
+              PLACEHOLDER:
             VCPKG_TRIPLET: "x64-windows-static-release"
-            VCPKG_EXE: ${VCPKG_ROOT}\vcpkg.exe
+            VCPKG_EXE: "vcpkg\\vcpkg.exe"
             CMD_COMPILE: |
-              cmake -DCMAKE_INSTALL_PREFIX:PATH=%cd%\..\release -DBUILD_SHARED_LIBS=OFF ..
-              cmake --build . --config Release --target INSTALL
-              cd ..\release
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=%cd%\release -DCMAKE_TOOLCHAIN_FILE=%cd%\vcpkg\scripts\buildsystems\vcpkg.cmake -DBUILD_SHARED_LIBS=OFF .
+              cmake --build build --config Release --target INSTALL
+              cd release
               Compress-Archive -Path ./* -Destination apngasm_${{github.ref_name}}_windows_AMD64.zip
             OUT_FILE_NAME: release/apngasm_${{github.ref_name}}_windows_AMD64.zip
 
