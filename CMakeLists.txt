@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0074 NEW)
 
+set(CMAKE_TOOLCHAIN_FILE "" CACHE STRING "Can be set optionally, e.g. for vcpkg toolchain")
+
 project(APNGASM)
 
 # If BUILD_SHARED_LIBS was set to OFF, prepare for static linking
