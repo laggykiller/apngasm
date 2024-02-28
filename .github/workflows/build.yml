@@ -20,13 +20,8 @@ jobs:
           - os: ubuntu-20.04
             TARGET: linux
             ENV:
-              PLACEHOLDER:
-            CMD_DEPS: |
-              sudo apt-get install libpng-dev \
-              libboost-program-options-dev \
-              libboost-regex-dev \
-              libboost-system-dev \
-              libboost-filesystem-dev
+              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            VCPKG_TRIPLET: "x64-linux-release"
             CMD_COMPILE: |
               cd build
               cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
@@ -38,19 +33,12 @@ jobs:
           - os: macos-12
             TARGET: macos
             ENV:
+              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
               MACOSX_DEPLOYMENT_TARGET: "10.9"
               VCPKG_OSX_DEPLOYMENT_TARGET: "10.9"
               VCPKG_C_FLAGS: "-mmacosx-version-min=10.9"
               VCPKG_CXX_FLAGS: "-mmacosx-version-min=10.9"
-            CMD_DEPS: |
-              ${VCPKG_ROOT}/vcpkg install zlib:x64-osx-release
-              ${VCPKG_ROOT}/vcpkg install libpng:x64-osx-release
-              ${VCPKG_ROOT}/vcpkg install boost-program-options:x64-osx-release
-              ${VCPKG_ROOT}/vcpkg install boost-regex:x64-osx-release
-              ${VCPKG_ROOT}/vcpkg install boost-system:x64-osx-release
-              ${VCPKG_ROOT}/vcpkg install boost-algorithm:x64-osx-release
-              ${VCPKG_ROOT}/vcpkg install boost-property-tree:x64-osx-release
-              ${VCPKG_ROOT}/vcpkg install boost-foreach:x64-osx-release
+            VCPKG_TRIPLET: "x64-osx-release"
             CMD_COMPILE: |
               cd build
               cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" ..
@@ -62,13 +50,11 @@ jobs:
           - os: windows-2019
             TARGET: windows
             ENV:
-              PLACEHOLDER:
-            CMD_DEPS: |
-              cd windows
-              .\compile_deps.bat
+              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            VCPKG_TRIPLET: "x64-windows-static-release"
             CMD_COMPILE: |
-              cd windows
-              .\compile.bat
+              cmake -DCMAKE_INSTALL_PREFIX:PATH=%cd%\..\release -DBUILD_SHARED_LIBS=OFF ..
+              cmake --build . --config Release --target INSTALL
               cd ..\release
               Compress-Archive -Path ./* -Destination apngasm_${{github.ref_name}}_windows_AMD64.zip
             OUT_FILE_NAME: release/apngasm_${{github.ref_name}}_windows_AMD64.zip
@@ -81,7 +67,15 @@ jobs:
 
       - name: "Install ${{matrix.TARGET}} dependencies:"
         env: ${{ matrix.ENV }}
-        run: ${{ matrix.CMD_DEPS }}
+        run: |
+          ${VCPKG_ROOT}/vcpkg install zlib:${{ matrix.VCPKG_TRIPLET }}
+          ${VCPKG_ROOT}/vcpkg install libpng:${{ matrix.VCPKG_TRIPLET }}
+          ${VCPKG_ROOT}/vcpkg install boost-program-options:${{ matrix.VCPKG_TRIPLET }}
+          ${VCPKG_ROOT}/vcpkg install boost-regex:${{ matrix.VCPKG_TRIPLET }}
+          ${VCPKG_ROOT}/vcpkg install boost-system:${{ matrix.VCPKG_TRIPLET }}
+          ${VCPKG_ROOT}/vcpkg install boost-algorithm:${{ matrix.VCPKG_TRIPLET }}
+          ${VCPKG_ROOT}/vcpkg install boost-property-tree:${{ matrix.VCPKG_TRIPLET }}
+          ${VCPKG_ROOT}/vcpkg install boost-foreach:${{ matrix.VCPKG_TRIPLET }}
 
       - name: "Create directory on ${{matrix.TARGET}}:"
         run: |
