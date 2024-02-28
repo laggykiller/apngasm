@@ -74,7 +74,7 @@ public:
       createParentDirs(filePath);
       return true;
     }
-    if (!filesystem::exists(filesystem::path(filePath))) {
+    if (!boost::filesystem::exists(boost::filesystem::path(filePath))) {
       createParentDirs(filePath);
       return true;
     }
