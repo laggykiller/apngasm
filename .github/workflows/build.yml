@@ -25,7 +25,7 @@ jobs:
             VCPKG_TRIPLET: "x64-linux"
             VCPKG_EXE: vcpkg/vcpkg
             CMD_COMPILE: |
-              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/release -DCMAKE_TOOLCHAIN_FILE=${PWD}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${VCPKG_TRIPLET} .
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/release -DCMAKE_TOOLCHAIN_FILE=${PWD}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${VCPKG_TRIPLET} -DBUILD_SHARED_LIBS=OFF .
               make -C build -j install
               cd release
               zip -r9 apngasm_${{github.ref_name}}_linux_AMD64.zip ./*
@@ -44,7 +44,7 @@ jobs:
             VCPKG_EXE: vcpkg/vcpkg
             VCPKG_EXTRA: "--overlay-triplets=macos"
             CMD_COMPILE: |
-              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/release -DCMAKE_TOOLCHAIN_FILE=${PWD}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${VCPKG_TRIPLET} .
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=${PWD}/release -DCMAKE_TOOLCHAIN_FILE=${PWD}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${VCPKG_TRIPLET} -DBUILD_SHARED_LIBS=OFF .
               make -C build -j install
               cd release
               zip -r9 apngasm_${{github.ref_name}}_macos_AMD64.zip ./*
