@@ -37,7 +37,7 @@ jobs:
               zip -r9 apngasm_${{github.ref_name}}_linux_AMD64.zip ./*
             OUT_FILE_NAME: release/apngasm_${{github.ref_name}}_linux_AMD64.zip
 
-          - os: macos-11
+          - os: macos-12
             TARGET: macos
             ENV_DEPS:
               MACOSX_DEPLOYMENT_TARGET: "10.9"
@@ -45,18 +45,22 @@ jobs:
               LDFLAGS: -L/usr/local/opt/icu4c/lib
               CPPFLAGS: -I/usr/local/opt/icu4c/include
               MACOSX_DEPLOYMENT_TARGET: "10.9"
+              VCPKG_OSX_DEPLOYMENT_TARGET: "10.9"
+              VCPKG_C_FLAGS: "-mmacosx-version-min=10.9"
+              VCPKG_CXX_FLAGS: "-mmacosx-version-min=10.9"
             CMD_DEPS: |
-              brew reinstall --build-from-source cmake libpng lzlib icu4c &&
-              curl -O -L "https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.zip" &&
-              tar -xf ./boost_1_82_0.zip &&
-              rm ./boost_1_82_0.zip &&
-              mv ./boost_1_82_0 ./boost &&
-              cd ./boost &&
-              ./bootstrap.sh &&
-              ./b2 install --with-program_options --with-regex --with-system --with-filesystem -j4
+              ${VCPKG_ROOT}/vcpkg install zlib:x64-osx
+              ${VCPKG_ROOT}/vcpkg install libpng:x64-osx
+              ${VCPKG_ROOT}/vcpkg install boost-program-options:x64-osx
+              ${VCPKG_ROOT}/vcpkg install boost-regex:x64-osx
+              ${VCPKG_ROOT}/vcpkg install boost-system:x64-osx
+              ${VCPKG_ROOT}/vcpkg install boost-algorithm:x64-osx
+              ${VCPKG_ROOT}/vcpkg install boost-property-tree:x64-osx
+              ${VCPKG_ROOT}/vcpkg install boost-foreach:x64-osx
+              ${VCPKG_ROOT}/vcpkg install icu:x64-osx
             CMD_COMPILE: |
               cd build
-              cmake -DBoost_USE_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
+              cmake "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" ..
               make -j install
               cd ../release
               zip -r9 apngasm_${{github.ref_name}}_macos_AMD64.zip ./*
@@ -80,6 +84,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - uses: friendlyanon/setup-vcpkg@v1
 
       - name: "Install ${{matrix.TARGET}} dependencies:"
         env: ${{ matrix.ENV_DEPS }}
