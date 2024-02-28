@@ -25,7 +25,7 @@ jobs:
             VCPKG_TRIPLET: "x64-linux-release"
             VCPKG_EXE: vcpkg/vcpkg
             CMD_COMPILE: |
-              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=$PWD/release -DCMAKE_TOOLCHAIN_FILE=$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake .
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=$PWD/release .
               make -C build -j install
               cd release
               zip -r9 apngasm_${{github.ref_name}}_linux_AMD64.zip ./*
@@ -41,7 +41,7 @@ jobs:
             VCPKG_TRIPLET: "x64-osx-release"
             VCPKG_EXE: vcpkg/vcpkg
             CMD_COMPILE: |
-              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=$PWD/release -DCMAKE_TOOLCHAIN_FILE=$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake .
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=$PWD/release .
               make -C build -j install
               cd release
               zip -r9 apngasm_${{github.ref_name}}_macos_AMD64.zip ./*
@@ -54,7 +54,7 @@ jobs:
             VCPKG_TRIPLET: "x64-windows-static-release"
             VCPKG_EXE: "vcpkg\\vcpkg.exe"
             CMD_COMPILE: |
-              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=%cd%\release -DCMAKE_TOOLCHAIN_FILE=%cd%\vcpkg\scripts\buildsystems\vcpkg.cmake -DBUILD_SHARED_LIBS=OFF .
+              cmake -B build -DCMAKE_INSTALL_PREFIX:PATH=%cd%\release -DBUILD_SHARED_LIBS=OFF .
               cmake --build build --config Release --target INSTALL
               cd release
               Compress-Archive -Path ./* -Destination apngasm_${{github.ref_name}}_windows_AMD64.zip

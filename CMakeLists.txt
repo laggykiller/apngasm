@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0074 NEW)
 
-set(CMAKE_TOOLCHAIN_FILE "" CACHE STRING "Can be set optionally, e.g. for vcpkg toolchain")
+set(CMAKE_TOOLCHAIN_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
+if (EXISTS ${CMAKE_TOOLCHAIN_FILE_PATH})
+  set(CMAKE_TOOLCHAIN_FILE ${CMAKE_TOOLCHAIN_FILE_PATH} CACHE STRING "Vcpkg toolchain file")
+endif ()
 
 project(APNGASM)
 
