@@ -35,6 +35,7 @@ jobs:
             TARGET: macos
             ENV:
               MACOSX_DEPLOYMENT_TARGET: "10.9"
+              CXXFLAGS: "-std=c++0x -stdlib=libc++"
               VCPKG_OSX_DEPLOYMENT_TARGET: "10.9"
               VCPKG_C_FLAGS: "-mmacosx-version-min=10.9"
               VCPKG_CXX_FLAGS: "-mmacosx-version-min=10.9"
