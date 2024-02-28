@@ -22,6 +22,7 @@ jobs:
             ENV:
               DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
             VCPKG_TRIPLET: "x64-linux-release"
+            VCPKG_EXE: ${VCPKG_ROOT}/vcpkg
             CMD_COMPILE: |
               cd build
               cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
@@ -39,9 +40,10 @@ jobs:
               VCPKG_C_FLAGS: "-mmacosx-version-min=10.9"
               VCPKG_CXX_FLAGS: "-mmacosx-version-min=10.9"
             VCPKG_TRIPLET: "x64-osx-release"
+            VCPKG_EXE: ${VCPKG_ROOT}/vcpkg
             CMD_COMPILE: |
               cd build
-              cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" ..
+              cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release ..
               make -j install
               cd ../release
               zip -r9 apngasm_${{github.ref_name}}_macos_AMD64.zip ./*
@@ -50,8 +52,9 @@ jobs:
           - os: windows-2019
             TARGET: windows
             ENV:
-              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+              DCMAKE_TOOLCHAIN_FILE: "${VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
             VCPKG_TRIPLET: "x64-windows-static-release"
+            VCPKG_EXE: ${VCPKG_ROOT}\vcpkg.exe
             CMD_COMPILE: |
               cmake -DCMAKE_INSTALL_PREFIX:PATH=%cd%\..\release -DBUILD_SHARED_LIBS=OFF ..
               cmake --build . --config Release --target INSTALL
@@ -68,14 +71,14 @@ jobs:
       - name: "Install ${{matrix.TARGET}} dependencies:"
         env: ${{ matrix.ENV }}
         run: |
-          ${VCPKG_ROOT}/vcpkg install zlib:${{ matrix.VCPKG_TRIPLET }}
-          ${VCPKG_ROOT}/vcpkg install libpng:${{ matrix.VCPKG_TRIPLET }}
-          ${VCPKG_ROOT}/vcpkg install boost-program-options:${{ matrix.VCPKG_TRIPLET }}
-          ${VCPKG_ROOT}/vcpkg install boost-regex:${{ matrix.VCPKG_TRIPLET }}
-          ${VCPKG_ROOT}/vcpkg install boost-system:${{ matrix.VCPKG_TRIPLET }}
-          ${VCPKG_ROOT}/vcpkg install boost-algorithm:${{ matrix.VCPKG_TRIPLET }}
-          ${VCPKG_ROOT}/vcpkg install boost-property-tree:${{ matrix.VCPKG_TRIPLET }}
-          ${VCPKG_ROOT}/vcpkg install boost-foreach:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install zlib:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install libpng:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install boost-program-options:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install boost-regex:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install boost-system:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install boost-algorithm:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install boost-property-tree:${{ matrix.VCPKG_TRIPLET }}
+          ${{ matrix.VCPKG_EXE }} install boost-foreach:${{ matrix.VCPKG_TRIPLET }}
 
       - name: "Create directory on ${{matrix.TARGET}}:"
         run: |
