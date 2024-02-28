@@ -19,10 +19,8 @@ jobs:
         include:
           - os: ubuntu-20.04
             TARGET: linux
-            ENV_DEPS:
-              PLACEHOLDER_ENV:
-            ENV_COMPILE:
-              PLACEHOLDER_ENV:
+            ENV:
+              PLACEHOLDER:
             CMD_DEPS: |
               sudo apt-get install libpng-dev \
               libboost-program-options-dev \
@@ -39,11 +37,7 @@ jobs:
 
           - os: macos-12
             TARGET: macos
-            ENV_DEPS:
-              MACOSX_DEPLOYMENT_TARGET: "10.9"
-            ENV_COMPILE:
-              LDFLAGS: -L/usr/local/opt/icu4c/lib
-              CPPFLAGS: -I/usr/local/opt/icu4c/include
+            ENV:
               MACOSX_DEPLOYMENT_TARGET: "10.9"
               VCPKG_OSX_DEPLOYMENT_TARGET: "10.9"
               VCPKG_C_FLAGS: "-mmacosx-version-min=10.9"
@@ -68,10 +62,8 @@ jobs:
 
           - os: windows-2019
             TARGET: windows
-            ENV_DEPS:
-              PLACEHOLDER_ENV:
-            ENV_COMPILE:
-              PLACEHOLDER_ENV:
+            ENV:
+              PLACEHOLDER:
             CMD_DEPS: |
               cd windows
               .\compile_deps.bat
@@ -86,9 +78,10 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: friendlyanon/setup-vcpkg@v1
+        with: { committish: fba75d09065fcc76a25dcf386b1d00d33f5175af }
 
       - name: "Install ${{matrix.TARGET}} dependencies:"
-        env: ${{ matrix.ENV_DEPS }}
+        env: ${{ matrix.ENV }}
         run: ${{ matrix.CMD_DEPS }}
 
       - name: "Create directory on ${{matrix.TARGET}}:"
@@ -97,7 +90,7 @@ jobs:
           mkdir build
 
       - name: "Compile on ${{matrix.TARGET}}:"
-        env: ${{ matrix.ENV_COMPILE }}
+        env: ${{ matrix.ENV }}
         run: ${{ matrix.CMD_COMPILE }}
 
       - name: Get Release
