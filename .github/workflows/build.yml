@@ -43,18 +43,17 @@ jobs:
               VCPKG_C_FLAGS: "-mmacosx-version-min=10.9"
               VCPKG_CXX_FLAGS: "-mmacosx-version-min=10.9"
             CMD_DEPS: |
-              ${VCPKG_ROOT}/vcpkg install zlib:x64-osx
-              ${VCPKG_ROOT}/vcpkg install libpng:x64-osx
-              ${VCPKG_ROOT}/vcpkg install boost-program-options:x64-osx
-              ${VCPKG_ROOT}/vcpkg install boost-regex:x64-osx
-              ${VCPKG_ROOT}/vcpkg install boost-system:x64-osx
-              ${VCPKG_ROOT}/vcpkg install boost-algorithm:x64-osx
-              ${VCPKG_ROOT}/vcpkg install boost-property-tree:x64-osx
-              ${VCPKG_ROOT}/vcpkg install boost-foreach:x64-osx
-              ${VCPKG_ROOT}/vcpkg install icu:x64-osx
+              ${VCPKG_ROOT}/vcpkg install zlib:x64-osx-release
+              ${VCPKG_ROOT}/vcpkg install libpng:x64-osx-release
+              ${VCPKG_ROOT}/vcpkg install boost-program-options:x64-osx-release
+              ${VCPKG_ROOT}/vcpkg install boost-regex:x64-osx-release
+              ${VCPKG_ROOT}/vcpkg install boost-system:x64-osx-release
+              ${VCPKG_ROOT}/vcpkg install boost-algorithm:x64-osx-release
+              ${VCPKG_ROOT}/vcpkg install boost-property-tree:x64-osx-release
+              ${VCPKG_ROOT}/vcpkg install boost-foreach:x64-osx-release
             CMD_COMPILE: |
               cd build
-              cmake "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" ..
+              cmake -DCMAKE_INSTALL_PREFIX:PATH=$PWD/../release "-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" ..
               make -j install
               cd ../release
               zip -r9 apngasm_${{github.ref_name}}_macos_AMD64.zip ./*
